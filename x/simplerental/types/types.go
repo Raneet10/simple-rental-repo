@@ -1,17 +1,31 @@
 package types
 
 import (
-  "fmt"
-  "strings"
+	"fmt"
+	"strings"
 
-  sdk "github.com/cosmoscosmos-sdk/types";
+	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-type Rental struct {
+var MinPlacePrice = sdk.Coins{sdk.NewInt64Coin("rentaltoken", 1)}
 
-  Value string `json:"value"`
-  Price sdk.coins `json:"price"`
-  Owner sdk.AccAddress `json:"owner"`
-  Current sdk.AccAddress `json:"current"`
-  Booked boolean `json: "booked"`
+type Rental struct {
+	Price   sdk.Coins      `json:"price"`
+	Owner   sdk.AccAddress `json:"owner"`
+	Current sdk.AccAddress `json:"current"`
+	Booked  bool           `json: "booked"`
+}
+
+func NewRental() Rental {
+	return Rental{
+		Price:  MinPlacePrice,
+		Booked: false,
+	}
+}
+
+func (r Rental) String() string {
+	return strings.TrimSpace(fmt.Sprintf(`Owner: %s
+    Price: %s
+    Booked: %s
+    Current: %s`, r.Owner, r.Price, r.Booked, r.Current))
 }
