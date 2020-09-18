@@ -18,6 +18,7 @@ require (
 	github.com/tendermint/tendermint v0.33.2
 	github.com/tendermint/tm-db v0.5.0
 	github.com/ugorji/go/codec v0.0.0-20181204163529-d75b2dcb6bc8 // indirect
+	github.com/walle/lll v1.0.1 // indirect
 	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297 // indirect
 	golang.org/x/text v0.3.2 // indirect
 )
