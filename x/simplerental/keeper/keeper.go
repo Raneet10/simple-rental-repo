@@ -13,6 +13,15 @@ type Keeper struct {
 	cdc        *codec.Codec
 }
 
+func NewKeeper(CoinKeeper types.BankKeeper, storeKey sdk.StoreKey, cdc *codec.Codec) Keeper {
+
+	return Keeper{
+		CoinKeeper: CoinKeeper,
+		storeKey:   storeKey,
+		cdc:        cdc,
+	}
+}
+
 func (k Keeper) SetRentalPlaceDetails(ctx sdk.Context, name string, rental types.Rental) {
 
 	if rental.Owner.Empty() {
@@ -33,6 +42,89 @@ func (k Keeper) GetRentalPlaceDetails(ctx sdk.Context, name string) types.Rental
 	var rental types.Rental
 	k.cdc.MustUnmarshalBinaryBare(bz, &rental)
 	return rental
+}
+
+func (k Keeper) GetPrice(ctx sdk.Context, name string) sdk.Coins {
+
+	return k.GetRentalPlaceDetails(ctx, name).Price
+}
+
+func (k Keeper) GetRentPerDay(ctx sdk.Context, name string) sdk.Coins {
+
+	return k.GetRentalPlaceDetails(ctx, name).RentPerDay
+}
+
+func (k Keeper) GetAdvancePrice(ctx sdk.Context, name string) sdk.Coins {
+
+	return k.GetRentalPlaceDetails(ctx, name).Advance
+}
+
+func (k Keeper) GetOwner(ctx sdk.Context, name string) sdk.AccAddress {
+
+	return k.GetRentalPlaceDetails(ctx, name).Owner
+}
+
+func (k Keeper) HasOwner(ctx sdk.Context, name string) bool {
+
+	return !k.GetRentalPlaceDetails(ctx, name).Owner.Empty()
+}
+
+func (k Keeper) GetCurrent(ctx sdk.Context, name string) sdk.AccAddress {
+
+	return k.GetRentalPlaceDetails(ctx, name).Current
+}
+
+func (k Keeper) IsPlaceBooked(ctx sdk.Context, name string) bool {
+
+	return k.GetRentalPlaceDetails(ctx, name).Booked
+}
+
+func (k Keeper) SetPrice(ctx sdk.Context, name string, price sdk.Coins) {
+
+	rental := k.GetRentalPlaceDetails(ctx, name)
+	rental.Price = price
+	k.SetRentalPlaceDetails(ctx, name, rental)
+}
+
+func (k Keeper) SetRentPerDay(ctx sdk.Context, name string, rent sdk.Coins) {
+
+	rental := k.GetRentalPlaceDetails(ctx, name)
+	rental.RentPerDay = rent
+	k.SetRentalPlaceDetails(ctx, name, rental)
+}
+
+func (k Keeper) SetAdvance(ctx sdk.Context, name string, advance sdk.Coins) {
+
+	rental := k.GetRentalPlaceDetails(ctx, name)
+	rental.Advance = advance
+	k.SetRentalPlaceDetails(ctx, name, rental)
+}
+
+func (k Keeper) SetOwner(ctx sdk.Context, name string, newOwner sdk.AccAddress) {
+
+	rental := k.GetRentalPlaceDetails(ctx, name)
+	rental.Owner = newOwner
+	k.SetRentalPlaceDetails(ctx, name, rental)
+}
+
+func (k Keeper) SetCurrent(ctx sdk.Context, name string, current sdk.AccAddress) {
+
+	rental := k.GetRentalPlaceDetails(ctx, name)
+	rental.Current = current
+	k.SetRentalPlaceDetails(ctx, name, rental)
+}
+
+func (k Keeper) SetBookedStatus(ctx sdk.Context, name string, booked bool) {
+
+	rental := k.GetRentalPlaceDetails(ctx, name)
+	rental.Booked = booked
+	k.SetRentalPlaceDetails(ctx, name, rental)
+}
+
+func (k Keeper) DeletePlace(ctx sdk.Context, name string) {
+
+	store := ctx.KVStore(k.storeKey)
+	store.Delete([]byte(name))
 }
 
 func (k Keeper) IsPlacePresent(ctx sdk.Context, name string) bool {
