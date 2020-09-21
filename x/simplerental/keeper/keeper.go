@@ -1,6 +1,10 @@
 package keeper
 
 import (
+	"fmt"
+
+	"github.com/tendermint/tendermint/libs/log"
+
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/raneet10/simple-rental-repo/x/simplerental/types"
@@ -20,6 +24,10 @@ func NewKeeper(CoinKeeper types.BankKeeper, storeKey sdk.StoreKey, cdc *codec.Co
 		storeKey:   storeKey,
 		cdc:        cdc,
 	}
+}
+
+func (k Keeper) Logger(ctx sdk.Context) log.Logger {
+	return ctx.Logger.With("Module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
 func (k Keeper) SetRentalPlaceDetails(ctx sdk.Context, name string, rental types.Rental) {
@@ -72,6 +80,11 @@ func (k Keeper) HasOwner(ctx sdk.Context, name string) bool {
 func (k Keeper) GetCurrent(ctx sdk.Context, name string) sdk.AccAddress {
 
 	return k.GetRentalPlaceDetails(ctx, name).Current
+}
+
+func (k Keeper) GetIterator(ctx sdk.Context) sdk.Iterator {
+	store := ctx.KVStore(k.storeKey)
+	return sdk.KVStorePrefixIterator(store, []byte{})
 }
 
 func (k Keeper) IsPlaceBooked(ctx sdk.Context, name string) bool {
