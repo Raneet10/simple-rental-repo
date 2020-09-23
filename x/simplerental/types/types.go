@@ -7,7 +7,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-var MinPlacePrice = sdk.Coins{sdk.NewInt64Coin("rentaltoken", 5)}
+var MinPlacePrice = sdk.Coins{sdk.NewInt64Coin("pricetoken", 5)}
+var MinPlaceRent = sdk.Coins{sdk.NewInt64Coin("rentaltoken", 1)}
 
 type Rental struct {
 	Price      sdk.Coins      `json:"price"`
@@ -20,8 +21,9 @@ type Rental struct {
 
 func NewRental() Rental {
 	return Rental{
-		Price:  MinPlacePrice,
-		Booked: false,
+		Price:      MinPlacePrice,
+		RentPerDay: MinPlaceRent,
+		Booked:     false,
 	}
 }
 

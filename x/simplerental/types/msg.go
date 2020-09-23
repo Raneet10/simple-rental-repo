@@ -1,6 +1,8 @@
 package types
 
 import (
+	"strconv"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 )
@@ -13,12 +15,12 @@ var _ sdk.Msg = &MsgSetPlaceRent{}
 // Msg<Action> - struct for unjailing jailed validator
 type MsgSetPlaceRent struct {
 	Name       string         `json:"name"`
-	RentPerDay sdk.Coins      `json:"rent"`
+	RentPerDay string         `json:"rent"`
 	Owner      sdk.AccAddress `json:"owner"`
 }
 
 // NewMsg<Action> creates a new Msg<Action> instance
-func NewMsgSetPlaceRent(Name string, RentPerDay sdk.Coins, Owner sdk.AccAddress) MsgSetPlaceRent {
+func NewMsgSetPlaceRent(Name string, RentPerDay string, Owner sdk.AccAddress) MsgSetPlaceRent {
 	return MsgSetPlaceRent{
 		Name:       Name,
 		RentPerDay: RentPerDay,
@@ -50,9 +52,16 @@ func (msg MsgSetPlaceRent) ValidateBasic() error {
 		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Place Name can't be empty ")
 	}
 
-	if !msg.RentPerDay.IsAllPositive() {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Rent detail can't be empty")
+	rent, _ := strconv.Atoi(msg.RentPerDay)
+	if len(msg.RentPerDay) == 0 || rent < 0 {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Rent can't be empty and/or negative ")
+
 	}
+
+	//IF THE ABOVE DOESN'T WORK, USE THIS AND CHANGE RentPerDay TO sdk.Coins
+	/*if !msg.RentPerDay.IsAllPositive() || msg.RentPerDay.IsZero() {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Rent can't be empty and/or zero")
+	}*/
 
 	return nil
 }

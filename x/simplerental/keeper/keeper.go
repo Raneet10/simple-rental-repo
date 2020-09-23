@@ -46,7 +46,7 @@ func (k Keeper) GetRentalPlaceDetails(ctx sdk.Context, name string) types.Rental
 	if !k.IsPlacePresent(ctx, name) {
 		return types.NewRental()
 	}
-	bz := store.get([]byte(name))
+	bz := store.Get([]byte(name))
 	var rental types.Rental
 	k.cdc.MustUnmarshalBinaryBare(bz, &rental)
 	return rental
