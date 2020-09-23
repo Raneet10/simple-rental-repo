@@ -28,7 +28,7 @@ func NewRental() Rental {
 func (r Rental) String() string {
 	return strings.TrimSpace(fmt.Sprintf(`Owner: %s
     Price: %s
-    Booked: %s
+    Booked: %t
     Current: %s
 		RentPerDay: %s
 		Advance: %s`, r.Owner, r.Price, r.Booked, r.Current, r.RentPerDay, r.Advance))
