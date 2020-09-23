@@ -53,8 +53,8 @@ func (msg MsgSetPlaceRent) ValidateBasic() error {
 	}
 
 	rent, _ := strconv.Atoi(msg.RentPerDay)
-	if len(msg.RentPerDay) == 0 || rent < 0 {
-		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Rent can't be empty and/or negative ")
+	if len(msg.RentPerDay) == 0 || rent <= 0 {
+		return sdkerrors.Wrap(sdkerrors.ErrInvalidRequest, "Rent can't be empty, zero and/or negative ")
 
 	}
 
