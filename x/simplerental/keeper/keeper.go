@@ -27,7 +27,7 @@ func NewKeeper(CoinKeeper types.BankKeeper, storeKey sdk.StoreKey, cdc *codec.Co
 }
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
-	return ctx.Logger.With("Module", fmt.Sprintf("x/%s", types.ModuleName))
+	return ctx.Logger().With("Module", fmt.Sprintf("x/%s", types.ModuleName))
 }
 
 func (k Keeper) SetRentalPlaceDetails(ctx sdk.Context, name string, rental types.Rental) {
@@ -36,7 +36,7 @@ func (k Keeper) SetRentalPlaceDetails(ctx sdk.Context, name string, rental types
 		return
 	}
 
-	store := ctx.KVStrore(k.storeKey)
+	store := ctx.KVStore(k.storeKey)
 	store.Set([]byte(name), k.cdc.MustMarshalBinaryBare(rental))
 }
 

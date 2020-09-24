@@ -8,6 +8,7 @@ require (
 	github.com/cosmos/cosmos-sdk v0.38.2
 	github.com/cpuguy83/go-md2man v1.0.10 // indirect
 	github.com/golang/mock v1.3.1 // indirect
+	github.com/gorilla/mux v1.7.3
 	github.com/mdempsky/unconvert v0.0.0-20200228143138-95ecdbfc0b5f // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20190706150252-9beb055b7962 // indirect
 	github.com/securego/gosec v0.0.0-20200401082031-e946c8c39989 // indirect
