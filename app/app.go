@@ -25,6 +25,9 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/slashing"
 	"github.com/cosmos/cosmos-sdk/x/staking"
 	"github.com/cosmos/cosmos-sdk/x/supply"
+	"github.com/raneet10/simple-rental-repo/x/simplerental/"
+	simplerentalkeeper "github.com/raneet10/simple-rental-repo/x/simplerental/keeper"
+	simplerentaltypes "github.com/raneet10/simple-rental-repo/x/simplerental/types"
 )
 
 const appName = "simplerental"
@@ -33,12 +36,12 @@ var (
 	// TODO: rename your cli
 
 	// DefaultCLIHome default home directories for the application CLI
-	DefaultCLIHome = os.ExpandEnv("$HOME/.appcli")
+	DefaultCLIHome = os.ExpandEnv("$HOME/.simplerentalcli")
 
 	// TODO: rename your daemon
 
 	// DefaultNodeHome sets the folder where the application data and configuration will be stored
-	DefaultNodeHome = os.ExpandEnv("$HOME/.appd")
+	DefaultNodeHome = os.ExpandEnv("$HOME/.simplerentald")
 
 	// ModuleBasics The module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
@@ -52,7 +55,7 @@ var (
 		params.AppModuleBasic{},
 		slashing.AppModuleBasic{},
 		supply.AppModuleBasic{},
-		// TODO: Add your module(s) AppModuleBasic
+		simplerental.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -99,8 +102,7 @@ type SimpleRentalApp struct {
 	distrKeeper    distr.Keeper
 	supplyKeeper   supply.Keeper
 	paramsKeeper   params.Keeper
-	// TODO: Add your module(s)
-
+	simplerentalKeeper simplerentalkeeper.Keeper
 	// Module Manager
 	mm *module.Manager
 
@@ -126,7 +128,7 @@ func NewInitApp(
 
 	// TODO: Add the keys that module requires
 	keys := sdk.NewKVStoreKeys(bam.MainStoreKey, auth.StoreKey, staking.StoreKey,
-		supply.StoreKey, distr.StoreKey, slashing.StoreKey, params.StoreKey)
+		supply.StoreKey, distr.StoreKey, slashing.StoreKey, params.StoreKey, simplerentaltypes.StoreKey)
 
 	tKeys := sdk.NewTransientStoreKeys(staking.TStoreKey, params.TStoreKey)
 
@@ -207,6 +209,11 @@ func NewInitApp(
 	)
 
 	// TODO: Add your module(s) keepers
+	app.simplerentalKeeper = simplerentalkeeper.NewKeeper(
+		app.bankKeeper,
+		app.cdc,
+		keys[simplerentaltypes.StoreKey],
+	)
 
 	// NOTE: Any module instantiated in the module manager that is later modified
 	// must be passed by reference here.
@@ -217,7 +224,7 @@ func NewInitApp(
 		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
 		distr.NewAppModule(app.distrKeeper, app.accountKeeper, app.supplyKeeper, app.stakingKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
-		// TODO: Add your module(s)
+		simplerental.NewAppModule(app.simplerentalKeeper, app.bankKeeper)
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
 
@@ -238,7 +245,7 @@ func NewInitApp(
 		auth.ModuleName,
 		bank.ModuleName,
 		slashing.ModuleName,
-		// TODO: Add your module(s)
+		simplerental.ModuleName
 		supply.ModuleName,
 		genutil.ModuleName,
 	)
