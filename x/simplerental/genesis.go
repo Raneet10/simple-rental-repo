@@ -2,8 +2,8 @@ package simplerental
 
 import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	abci "github.com/tendermint/tendermint/abci/types"
 	"github.com/raneet10/simple-rental-repo/x/simplerental/types"
+	abci "github.com/tendermint/tendermint/abci/types"
 )
 
 // InitGenesis initialize default parameters

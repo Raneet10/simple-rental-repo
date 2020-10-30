@@ -25,7 +25,6 @@ import (
 	"github.com/tendermint/tendermint/libs/cli"
 
 	"github.com/raneet10/simple-rental-repo/app"
-
 )
 
 func main() {
