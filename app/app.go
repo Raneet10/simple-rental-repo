@@ -95,13 +95,13 @@ type SimpleRentalApp struct {
 	subspaces map[string]params.Subspace
 
 	// keepers
-	accountKeeper  auth.AccountKeeper
-	bankKeeper     bank.Keeper
-	stakingKeeper  staking.Keeper
-	slashingKeeper slashing.Keeper
-	distrKeeper    distr.Keeper
-	supplyKeeper   supply.Keeper
-	paramsKeeper   params.Keeper
+	accountKeeper      auth.AccountKeeper
+	bankKeeper         bank.Keeper
+	stakingKeeper      staking.Keeper
+	slashingKeeper     slashing.Keeper
+	distrKeeper        distr.Keeper
+	supplyKeeper       supply.Keeper
+	paramsKeeper       params.Keeper
 	simplerentalKeeper simplerentalkeeper.Keeper
 	// Module Manager
 	mm *module.Manager
@@ -224,10 +224,9 @@ func NewInitApp(
 		supply.NewAppModule(app.supplyKeeper, app.accountKeeper),
 		distr.NewAppModule(app.distrKeeper, app.accountKeeper, app.supplyKeeper, app.stakingKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
-		simplerental.NewAppModule(app.simplerentalKeeper, app.bankKeeper)
+		simplerental.NewAppModule(app.simplerentalKeeper, app.bankKeeper),
 		staking.NewAppModule(app.stakingKeeper, app.accountKeeper, app.supplyKeeper),
 		slashing.NewAppModule(app.slashingKeeper, app.accountKeeper, app.stakingKeeper),
-
 	)
 	// During begin block slashing happens after distr.BeginBlocker so that
 	// there is nothing left over in the validator fee pool, so as to keep the
@@ -245,7 +244,7 @@ func NewInitApp(
 		auth.ModuleName,
 		bank.ModuleName,
 		slashing.ModuleName,
-		simplerental.ModuleName
+		simplerental.ModuleName,
 		supply.ModuleName,
 		genutil.ModuleName,
 	)
